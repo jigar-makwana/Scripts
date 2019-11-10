@@ -17,6 +17,9 @@ sudo apt-get install -y jenkins
 
 sudo apt install -y openjdk-8-jdk
 
-sudo service jenkins start
+#https://support.cloudbees.com/hc/en-us/articles/216118748-How-to-Start-Stop-or-Restart-your-Instance-
+#sudo service jenkins start
+
+sudo systemctl jenkins start
 sudo chkconfig jenkins on
 
