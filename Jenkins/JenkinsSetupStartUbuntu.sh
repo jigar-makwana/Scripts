@@ -8,8 +8,7 @@ sudo apt-get upgrade -y
 #echo "Some essentials..."
 sudo apt-get install -y curl wget git 
 
-git config --global user.email "########################"
-git config --global user.name "########"
+
 
 wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
 sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
