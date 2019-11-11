@@ -1,6 +1,8 @@
 #!/bin/bash
-
-#echo "Update and upgrade all the things..."
+mkdir log
+cd log/
+touch bootlog.
+echo "Update and upgrade all the things..." 
 
 sudo apt-get update -y
 sudo apt-get upgrade -y
