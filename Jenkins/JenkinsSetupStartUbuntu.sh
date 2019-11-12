@@ -1,10 +1,8 @@
 #!/bin/bash
-mkdir log
-cd log/
-touch bootlog.
-echo "Update and upgrade all the things..." 
 
-sudo apt-get update -y
+#echo "Update and upgrade all the things..." 
+
+sudo apt-get update 
 sudo apt-get upgrade -y
 
 #echo "Some essentials..."
@@ -24,4 +22,11 @@ sudo apt install -y openjdk-8-jdk
 
 sudo systemctl jenkins start
 sudo chkconfig jenkins on
+
+
+
+
+
+
+
 
