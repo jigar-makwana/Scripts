@@ -24,6 +24,10 @@ nano ~/root/.ssh/authorized_keys
 chmod 700 .ssh; chmod 640 .ssh/authorized_keys
 
 
+#from main server
+ssh -i ~/.ssh/id_rsa private.ip.of.other.server
+
+
 # if yoy have set up a passward to ssh
 ## you can copy the public with using passward to login to remote server
 
