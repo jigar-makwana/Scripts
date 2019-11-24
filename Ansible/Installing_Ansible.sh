@@ -7,7 +7,7 @@ apt-get update -y
 apt-get upgrade -y
 
 
-apt install -y python3-pip
+apt install -y python3-pip python-pip
 pip3 install awscli
 pip3 install ansible
 pip3 install boto boto3
