@@ -1,10 +1,10 @@
 node ('slave-1'){
    docker.image('jenkins-base-mvn-jdk-slave:latest').inside {
       def server
-  def buildInfo
-  def rtMaven
-  def scanConfig
-  def scanResult
+      def buildInfo
+      def rtMaven
+      def scanConfig
+      def scanResult
   }
 
   stage ('Clone') {
