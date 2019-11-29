@@ -1,0 +1,79 @@
+node ('slave-1'){
+   docker.image('jenkins-base-mvn-jdk-slave:latest').inside {
+      def server
+  def buildInfo
+  def rtMaven
+  def scanConfig
+  def scanResult
+  }
+
+  stage ('Clone') {
+      git branch: 'master', credentialsId: 's-ctp-p',url: 'https://BitBucket/URL.git'
+  }
+  stage ('Artifactory configuration') {
+      // Obtain an Artifactory server instance, defined in Jenkins --> Manage:
+      server = Artifactory.server 'ct-artifactory'
+      rtMaven = Artifactory.newMavenBuild()
+      rtMaven.tool = 'Maven3' // Tool name from Jenkins configuration
+      rtMaven.deployer releaseRepo: 'mvn-local-repo', server: server
+      rtMaven.deployer.deployArtifacts = false // Disable artifacts deployment during Maven run
+      buildInfo = Artifactory.newBuildInfo()
+  }
+  stage ('Clean') {
+      rtMaven.run pom: 'pom.xml', goals: 'clean'
+  }
+  stage ('Test') {
+      rtMaven.run pom: 'pom.xml', goals: 'org.jacoco:jacoco-maven-plugin:prepare-agent test'
+  }
+  stage ('Package') {
+      rtMaven.run pom: 'pom.xml', goals: 'package -DskipTests=true', buildInfo: buildInfo
+  }
+  stage ('Sonar Scan') {
+      rtMaven.run pom: 'pom.xml', goals: 'sonar:sonar -Dsonar.host.url=https://sonarqube.com'
+  }
+  stage ('Deploy') {
+      rtMaven.deployer.deployArtifacts buildInfo
+  }
+  stage ('Publish build info') {
+      server.publishBuildInfo buildInfo
+      scanConfig = [
+'buildName'      : buildInfo.name,
+'buildNumber'    : buildInfo.number
+]
+}
+stage ('Xray Scan') {
+scanResult = server.xrayScan scanConfig
+  }
+  stage('Build image') {
+       /* This builds the actual image; synonymous to
+        * docker build on the command line */
+       app = docker.build("repo/app")
+   }
+   stage('Push Image to AWS ECR'){
+       docker.withRegistry('https://1233455666777.dkr.ecr.us-east-1.amazonaws.com','ecr:us-east-1:aws-ecr') {
+         
+          // Add custom tag
+         GIT_LATEST_TAG = sh (script: "git describe --abbrev=0 --tags", returnStdout: true).trim()
+ 
+        CUSTOM_IMAGE_TAG = sh (script: "echo ${GIT_LATEST_TAG}-${env.BUILD_NUMBER}-snapshot", returnStdout: true).trim()
+         // Push the image with custom tag
+       docker.image('repo/app').push("${CUSTOM_IMAGE_TAG}")
+       }
+   }
+}
+here is the pipeline script (Jenkinsfile)
+And the dockerfile:
+## Java
+#FROM openjdk:8-alpine
+FROM 1234556666655.dkr.ecr.us-east-1.amazonaws.com/repo/alpine-java-8-appd:latest
+## Add created JAR to image
+ADD target/*.jar /usr/local/app.jar
+#ADD target/classes/bootstrap.yml /usr/local/bootstrap.yml
+
+## Expose container PORT
+EXPOSE 8080
+EXPOSE 8081
+
+## Default command to be executed when the container is deployed
+#ENTRYPOINT ["java"]
+#CMD ["-jar","/app.jar"]
