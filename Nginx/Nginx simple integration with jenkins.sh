@@ -17,3 +17,5 @@ server {
                 }
 }
 #nginx -t
+# reboot after installation and start jenkins by
+# systemctl start jenkins
