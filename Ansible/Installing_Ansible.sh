@@ -49,33 +49,7 @@ pip3 install boto boto3
 
 
 
- #### Install Ansible as a ansadmin user (on Control node)
-   ```sh 
-   su - ansadmin
-   pip3 install ansible --user
-   ``` 
-      Note: Ansible must be installed as a user (here ansadmin)
-1. check for ansible version 
-   ```sh
-   ansible --version
-   ```
 
-1. Log in as a ansadmin user on master and generate ssh key (on Control node)
-   ```sh 
-   ssh-keygen
-   ```
-1. Copy keys onto all ansible managed hosts (on Control node)
-   ```sh 
-   ssh-copy-id ansadmin@<target-server>
-   ```
-### Validation test
-
-1. Create a directory /etc/ansible and create an inventory file called "hosts" add control node IP address in it. 
-   
-1. Run ansible command as ansadmin user it should be successful (Master)
-   ```sh 
-   ansible all -m ping
-   ```
 
 
 
