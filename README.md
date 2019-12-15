@@ -2,7 +2,7 @@
 Random Scripts
 
 ### Purpose:
-come steps to follow for setuping a CI/CD Pipeline using this tools
+some steps to follow for setting up a CI/CD Pipeline using this tools
 - git
 - Jenkins
 - Maven
